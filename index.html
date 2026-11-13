@@ -1,0 +1,961 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>选择你的伴生灵宠 · 山海经二十四兽</title>
+<meta name="description" content="二十道山中情境，八种性情维度，测出与你同频的上古异兽，并生成一张可保存的伴灵谱。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230B1512'/%3E%3Crect x='10' y='10' width='44' height='44' fill='none' stroke='%23B5432D' stroke-width='2'/%3E%3Cpath d='M20 24h24M20 32h16M20 40h20' stroke='%23E7E1D2' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;500;700;900&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+<style>
+/* ========== 基础变量 ========== */
+:root{
+  --void:#0B1512;
+  --void-2:#101E19;
+  --void-3:#16261F;
+  --paper:#E8E2D2;
+  --paper-2:#C6C0AE;
+  --dim:#8B8877;
+  --cin:#B5432D;
+  --cin-2:#D2603F;
+  --jade:#6D8F83;
+  --line:rgba(232,226,210,.16);
+  --line-2:rgba(232,226,210,.08);
+  --serif:"Noto Serif SC","Songti SC","STSong","Source Han Serif SC",serif;
+  --sans:"Noto Sans SC","PingFang SC","Hiragino Sans GB",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--void);
+  color:var(--paper);
+  font-family:var(--sans);
+  font-weight:400;
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity:.045;mix-blend-mode:screen;
+}
+.shell{position:relative;z-index:2;max-width:760px;margin:0 auto;padding:0 22px}
+
+/* ========== 顶栏 ========== */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+  padding:16px 0 14px;
+  background:rgba(11,21,18,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line-2);
+}
+.mark{font-family:var(--serif);font-size:13px;letter-spacing:.16em;color:var(--paper-2)}
+.mark b{color:var(--paper);font-weight:700}
+.jump{
+  font-size:12px;letter-spacing:.12em;color:var(--dim);
+  background:none;border:none;font-family:var(--sans);cursor:pointer;padding:4px 0;
+  border-bottom:1px solid transparent;transition:color .2s,border-color .2s;
+}
+.jump:hover{color:var(--paper);border-color:var(--cin)}
+
+/* ========== 封面 ========== */
+.view[hidden]{display:none}
+.cover{padding-bottom:64px}
+.hero{position:relative;margin-top:6px}
+.hero-art{display:block;width:100%;height:clamp(200px,30vh,320px);overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(to right,transparent,#000 7%,#000 93%,transparent)}
+.hero h1{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(42px,12.6vw,78px);
+  line-height:1.04;letter-spacing:.015em;
+  margin-top:-14px;
+}
+.hero h1 .l2{display:block;padding-left:1.1em;color:var(--paper)}
+.lede{
+  margin-top:22px;max-width:26em;
+  font-size:15px;line-height:2;color:var(--paper-2);font-weight:300;
+}
+.lede em{font-style:normal;color:var(--paper)}
+.actions-row{margin-top:34px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.cta{
+  font-family:var(--serif);font-size:16px;letter-spacing:.22em;
+  color:#F5EFE3;background:var(--cin);border:none;cursor:pointer;
+  padding:17px 34px 17px 40px;border-radius:0;
+  transition:background .22s,transform .18s;
+}
+.cta:hover{background:var(--cin-2)}
+.cta:active{transform:translateY(1px)}
+.ghost{
+  font-family:var(--sans);font-size:13px;letter-spacing:.1em;color:var(--dim);
+  background:none;border:none;cursor:pointer;padding:6px 0;
+  border-bottom:1px solid var(--line);transition:color .2s,border-color .2s;
+}
+.ghost:hover{color:var(--paper);border-color:var(--paper-2)}
+.meta-line{margin-top:18px;font-size:12px;letter-spacing:.14em;color:var(--dim)}
+.meta-line span{margin-right:1.6em;display:inline-block}
+
+/* ========== 云雷纹分隔 ========== */
+.rule-orn{
+  margin:52px 0 44px;height:14px;position:relative;overflow:hidden;
+  border-top:1px solid var(--line-2);
+}
+.rule-orn::before{
+  content:"";position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='14'%3E%3Cpath d='M2 12V4h8v4h4V2h6v10' fill='none' stroke='%236D8F83' stroke-opacity='.45' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat:repeat-x;background-position:0 0;opacity:.5;
+}
+
+/* ========== 图鉴 ========== */
+.atlas{padding-bottom:70px}
+.atlas-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:6px}
+.atlas-head h2{white-space:nowrap}
+@media(max-width:520px){.atlas-head{flex-direction:column;align-items:flex-start;gap:6px}}
+.atlas-head h2{font-family:var(--serif);font-weight:700;font-size:27px;letter-spacing:.06em}
+.atlas-head p{font-size:12px;color:var(--dim);letter-spacing:.08em}
+.atlas-note{font-size:13px;color:var(--paper-2);line-height:1.9;margin:10px 0 22px;max-width:32em;font-weight:300}
+.beast-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+  background:var(--line-2);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+@media(min-width:720px){.beast-grid{grid-template-columns:repeat(4,1fr)}}
+.beast-cell{
+  background:var(--void);border:none;text-align:left;cursor:pointer;
+  padding:15px 12px 16px;display:grid;grid-template-columns:38px 1fr;gap:11px;align-items:center;
+  color:inherit;font-family:var(--sans);
+  transition:background .2s;
+}
+.beast-cell:hover{background:var(--void-3)}
+.beast-cell .rune{width:38px;height:38px;opacity:.62}
+.beast-cell:hover .rune{opacity:1}
+.cell-name{font-family:var(--serif);font-size:19px;font-weight:700;letter-spacing:.04em;line-height:1.2}
+.cell-type{font-size:11px;color:var(--dim);letter-spacing:.06em;margin-top:3px}
+
+/* ========== 答题 ========== */
+.quiz{padding-bottom:60px;min-height:70vh}
+.q-top{display:flex;align-items:baseline;justify-content:space-between;margin-top:10px}
+.q-count{font-family:var(--serif);font-size:15px;letter-spacing:.1em;color:var(--paper-2)}
+.q-count b{font-size:26px;font-weight:700;color:var(--paper);margin-right:2px}
+.q-count i{font-style:normal;color:var(--dim);font-size:12px;margin-left:4px}
+.q-progress{position:relative;height:1px;background:var(--line-2);margin:14px 0 0}
+.q-progress i{position:absolute;left:0;top:0;height:1px;background:var(--cin);transition:width .35s ease}
+.q-body{padding-top:clamp(28px,5vh,54px)}
+.q-text{
+  font-family:var(--serif);font-weight:500;font-size:clamp(24px,6.4vw,34px);
+  line-height:1.5;letter-spacing:.02em;
+}
+.q-hint{font-size:12.5px;color:var(--dim);letter-spacing:.06em;margin-top:12px}
+.opts{margin-top:32px;display:flex;flex-direction:column}
+.opt{
+  display:grid;grid-template-columns:2.2em 1fr;gap:14px;align-items:baseline;
+  padding:19px 10px 19px 4px;
+  background:none;border:none;border-top:1px solid var(--line);
+  color:var(--paper);text-align:left;cursor:pointer;font-family:var(--sans);
+  transition:background .18s,padding .18s,color .18s;
+}
+.opt:last-child{border-bottom:1px solid var(--line)}
+.opt:hover{background:rgba(232,226,210,.028);padding-left:12px}
+.opt .tick{
+  font-family:var(--serif);font-size:13px;color:var(--cin);
+  border:1px solid rgba(181,67,45,.45);width:2.2em;height:2.2em;
+  display:flex;align-items:center;justify-content:center;justify-self:start;
+  transition:background .18s,color .18s;
+}
+.opt:hover .tick{border-color:rgba(181,67,45,.75);color:var(--paper)}
+.opt .txt{font-size:15.5px;line-height:1.75;font-weight:300;color:var(--paper-2)}
+.opt:hover .txt{color:var(--paper)}
+.opt.picked{background:rgba(181,67,45,.09);box-shadow:inset 2px 0 0 var(--cin);padding-left:12px}
+.opt.picked .tick{background:var(--cin);border-color:var(--cin);color:#F5EFE3}
+.opt.picked .txt{color:var(--paper)}
+.q-foot{margin-top:26px;display:flex;justify-content:space-between;align-items:center}
+.q-foot .ghost{font-size:12px}
+.q-dots{display:flex;gap:4px}
+.q-dots i{width:3px;height:3px;background:var(--line);display:block}
+.q-dots i.on{background:var(--paper-2)}
+
+/* ========== 结果 ========== */
+.result{padding-bottom:70px}
+.res-head{padding-top:18px;display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.res-eyebrow{font-size:12px;letter-spacing:.18em;color:var(--dim)}
+.res-head .rune{width:56px;height:56px;opacity:.8}
+.res-name{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(64px,19vw,118px);line-height:.98;letter-spacing:.02em;
+  margin-top:12px;
+}
+.res-src{margin-top:14px;font-size:13px;letter-spacing:.12em;color:var(--jade)}
+.res-ori{
+  margin-top:16px;font-family:var(--serif);font-size:14.5px;line-height:1.9;
+  color:var(--paper-2);border-top:1px solid var(--line-2);padding-top:14px;max-width:34em;
+}
+.res-ori span{color:var(--dim);font-size:12px;letter-spacing:.08em;display:block;margin-bottom:2px}
+.score-band{
+  margin-top:30px;display:flex;align-items:flex-end;gap:14px;
+  border-bottom:1px solid var(--line);padding-bottom:16px;
+}
+.score-num{font-family:var(--serif);font-weight:900;font-size:54px;line-height:1;letter-spacing:.01em}
+.score-num u{text-decoration:none;font-size:20px;font-weight:500;margin-left:2px}
+.score-lab{font-size:12px;letter-spacing:.14em;color:var(--dim);padding-bottom:6px}
+.dims{display:grid;grid-template-columns:1fr 1fr;gap:10px 26px;margin-top:22px}
+.dim-row{display:grid;grid-template-columns:3.1em 1fr 1.9em;gap:9px;align-items:center;font-size:11.5px;color:var(--dim)}
+.dim-track{position:relative;height:1px;background:var(--line)}
+.dim-dot{position:absolute;top:-2.5px;width:6px;height:6px;background:var(--paper-2);transform:translateX(-50%)}
+.dim-dot.hi{background:var(--cin)}
+.dim-val{text-align:right;font-family:var(--serif);color:var(--paper-2)}
+.res-quote{
+  margin-top:34px;padding-left:18px;border-left:2px solid var(--cin);
+  font-family:var(--serif);font-size:clamp(19px,4.8vw,24px);line-height:1.75;font-weight:500;
+}
+.res-type{margin-top:30px;font-family:var(--serif);font-size:15px;letter-spacing:.14em;color:var(--cin-2)}
+.res-desc{margin-top:10px;font-size:14.5px;line-height:2;color:var(--paper-2);font-weight:300;max-width:34em}
+.traits{margin-top:30px;list-style:none}
+.trait{display:grid;grid-template-columns:4.6em 1fr;gap:12px;padding:14px 0;border-top:1px solid var(--line-2);align-items:baseline}
+.trait .k{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.06em}
+.trait .d{font-size:13px;line-height:1.8;color:var(--paper-2);font-weight:300}
+.rank{margin-top:32px;border-top:1px solid var(--line);padding-top:18px}
+.rank-row{display:flex;align-items:baseline;gap:14px;padding:9px 0;border-bottom:1px solid var(--line-2)}
+.rank-row .no{font-size:11px;letter-spacing:.1em;color:var(--dim);width:3.6em}
+.rank-row .nm{font-family:var(--serif);font-size:19px;font-weight:700;flex:1}
+.rank-row .pct{font-family:var(--serif);font-size:14px;color:var(--paper-2)}
+.pact{
+  margin-top:26px;font-family:var(--serif);font-size:15px;line-height:1.9;color:var(--paper);
+  padding:18px 20px;background:rgba(232,226,210,.045);
+}
+.pact em{font-style:normal;display:block}
+.pact span{display:block;font-family:var(--sans);font-size:11px;letter-spacing:.16em;color:var(--dim);margin-bottom:8px}
+.poster-wrap{margin-top:40px}
+.poster-wrap .lab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.poster-wrap .lab p{font-size:12px;letter-spacing:.14em;color:var(--dim)}
+#posterImg{width:100%;height:auto;display:block;border:1px solid var(--line);background:#E9E4D6;-webkit-touch-callout:default}
+#poster{display:none}
+.actions-row2{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap}
+.btn-solid{
+  flex:1;min-width:150px;font-family:var(--serif);font-size:14px;letter-spacing:.18em;
+  background:var(--cin);color:#F5EFE3;border:none;padding:16px 20px;cursor:pointer;border-radius:0;
+  transition:background .2s;
+}
+.btn-solid:hover{background:var(--cin-2)}
+.btn-line{
+  flex:1;min-width:150px;font-family:var(--sans);font-size:14px;letter-spacing:.14em;
+  background:none;color:var(--paper);border:1px solid var(--line);padding:16px 20px;cursor:pointer;
+  transition:border-color .2s,color .2s;
+}
+.btn-line:hover{border-color:var(--paper-2)}
+.toast{
+  position:fixed;left:50%;bottom:36px;transform:translate(-50%,12px);
+  background:var(--paper);color:var(--void);font-size:13px;letter-spacing:.08em;
+  padding:11px 20px;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:60;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ========== 兽卡弹层 ========== */
+.sheet{
+  position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;
+  background:rgba(4,9,7,.62);opacity:0;pointer-events:none;transition:opacity .28s;
+}
+.sheet.on{opacity:1;pointer-events:auto}
+.sheet-inner{
+  width:100%;max-width:760px;background:var(--void-2);
+  border-top:1px solid var(--line);padding:26px 22px 34px;
+  transform:translateY(22px);transition:transform .3s ease;max-height:88vh;overflow-y:auto;
+}
+.sheet.on .sheet-inner{transform:translateY(0)}
+.sheet-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.sheet-name{font-family:var(--serif);font-weight:900;font-size:44px;line-height:1.05;letter-spacing:.02em}
+.sheet-src{font-size:12px;letter-spacing:.1em;color:var(--jade);margin-top:8px}
+.sheet-close{
+  background:none;border:1px solid var(--line);color:var(--paper-2);width:34px;height:34px;
+  cursor:pointer;font-size:15px;line-height:1;border-radius:0;flex:none;
+}
+.sheet-close:hover{border-color:var(--paper-2);color:var(--paper)}
+.sheet-ori{font-family:var(--serif);font-size:14px;line-height:1.95;color:var(--paper-2);margin-top:18px;padding-top:16px;border-top:1px solid var(--line-2)}
+.sheet-quote{font-family:var(--serif);font-size:18px;line-height:1.8;margin-top:18px;padding-left:14px;border-left:2px solid var(--cin)}
+.sheet-type{font-size:12px;letter-spacing:.16em;color:var(--cin-2);margin-top:20px}
+.sheet-desc{font-size:14px;line-height:1.95;color:var(--paper-2);margin-top:8px;font-weight:300}
+.sheet-traits{list-style:none;margin-top:16px}
+.sheet-fill{
+  margin-top:22px;width:100%;background:none;border:1px solid var(--line);color:var(--paper);
+  padding:14px;font-size:13px;letter-spacing:.14em;cursor:pointer;font-family:var(--sans);
+}
+.sheet-fill:hover{border-color:var(--paper-2)}
+
+/* ========== 页脚 ========== */
+footer{border-top:1px solid var(--line-2);margin-top:10px;padding:22px 0 40px}
+footer p{font-size:11.5px;line-height:1.9;color:var(--dim);letter-spacing:.04em;max-width:34em}
+
+/* ========== 动效 ========== */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.rise{animation:rise .5s ease both}
+.opt{animation:rise .42s ease both}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+@media(min-width:900px){
+  .shell{padding:0 34px}
+  .hero h1{font-size:76px}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="topbar">
+    <span class="mark">山海经 · <b>伴灵谱</b></span>
+    <button class="jump" id="jumpAtlas">二十四兽</button>
+  </div>
+
+  <!-- ===== 视图：封面 ===== -->
+  <section class="view cover" id="viewCover">
+    <div class="hero">
+      <svg class="hero-art" viewBox="0 0 1000 320" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="rg1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#6D8F83" stop-opacity=".24"/>
+            <stop offset="1" stop-color="#6D8F83" stop-opacity=".03"/>
+          </linearGradient>
+          <linearGradient id="rg2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8FAEA2" stop-opacity=".26"/>
+            <stop offset="1" stop-color="#6D8F83" stop-opacity=".04"/>
+          </linearGradient>
+          <linearGradient id="rg3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#E8E2D2" stop-opacity=".09"/>
+            <stop offset="1" stop-color="#0B1512" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <circle cx="702" cy="166" r="25" fill="none" stroke="#B5432D" stroke-opacity=".5" stroke-width="1.2"/>
+        <path d="M-20 262 L96 176 L186 222 L318 116 L458 208 L596 148 L744 214 L872 168 L1020 224 L1020 340 L-20 340Z" fill="url(#rg1)"/>
+        <path d="M-20 292 L74 246 L182 278 L296 192 L414 262 L548 212 L688 276 L818 224 L940 270 L1020 248 L1020 340 L-20 340Z" fill="url(#rg2)"/>
+        <path d="M-20 318 L120 302 L246 314 L372 292 L508 316 L634 298 L776 314 L898 296 L1020 310 L1020 340 L-20 340Z" fill="url(#rg3)"/>
+        <path d="M-20 262 L96 176 L186 222 L318 116 L458 208 L596 148 L744 214 L872 168 L1020 224" fill="none" stroke="#E8E2D2" stroke-opacity=".17" stroke-width="1"/>
+        <g fill="none" stroke="#E8E2D2" stroke-opacity=".07" stroke-width="1">
+          <path d="M-20 250 C120 238 260 258 400 246 C540 234 680 254 820 242 C900 236 970 246 1020 240"/>
+          <path d="M-20 282 C140 272 300 290 440 280 C580 270 720 288 860 278 C930 273 990 280 1020 276"/>
+        </g>
+      </svg>
+      <h1>选择你的<span class="l2">伴生灵宠</span></h1>
+    </div>
+
+    <p class="lede">
+      上古的山里，每一只异兽都有一种活法。<br>
+      二十道情境，问你怎么走夜路、怎么接住别人的话、怎么在雾里做决定。<br>
+      答完，会有一只与你同频的兽走出来——<em>它不评判你，只是印证你。</em>
+    </p>
+
+    <div class="actions-row">
+      <button class="cta" id="btnStart">入山</button>
+      <button class="ghost" id="btnPeek">先翻一遍图谱</button>
+    </div>
+
+    <div class="meta-line">
+      <span>二十问</span><span>约四分钟</span><span>二十四兽</span>
+    </div>
+
+    <div class="rule-orn" aria-hidden="true"></div>
+
+    <section class="atlas" id="atlasBlock">
+      <div class="atlas-head">
+        <h2>二十四兽</h2>
+        <p>南山经 · 西山经 · 北山经 · 海内 · 大荒</p>
+      </div>
+      <p class="atlas-note">全部取《山海经》原文所载之兽，各配一种性情与一句判词。点开可见原文与解析。</p>
+      <div class="beast-grid" id="beastGrid"></div>
+    </section>
+  </section>
+
+  <!-- ===== 视图：答题 ===== -->
+  <section class="view quiz" id="viewQuiz" hidden>
+    <div class="q-top">
+      <div class="q-count"><b id="qNow">01</b><i>/ 20</i></div>
+      <div class="q-dots" id="qDots" aria-hidden="true"></div>
+    </div>
+    <div class="q-progress"><i id="qBar" style="width:5%"></i></div>
+    <div class="q-body">
+      <h2 class="q-text" id="qText"></h2>
+      <p class="q-hint">凭第一反应选，不要权衡。</p>
+      <div class="opts" id="qOpts"></div>
+      <div class="q-foot">
+        <button class="ghost" id="btnBack">上一问</button>
+        <button class="ghost" id="btnQuit">退出</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：结果 ===== -->
+  <section class="view result" id="viewResult" hidden>
+    <div class="res-head">
+      <div>
+        <p class="res-eyebrow">你的伴生灵宠</p>
+        <h2 class="res-name" id="resName"></h2>
+        <p class="res-src" id="resSrc"></p>
+      </div>
+      <svg class="rune" id="resRune" viewBox="0 0 100 100" aria-hidden="true"></svg>
+    </div>
+    <div class="res-ori"><span>原文</span><q id="resOri"></q></div>
+    <div class="score-band">
+      <div class="score-num"><span id="resPct"></span><u>%</u></div>
+      <div class="score-lab">性情相似度</div>
+    </div>
+    <div class="dims" id="resDims"></div>
+    <p class="res-quote" id="resQuote"></p>
+    <p class="res-type" id="resType"></p>
+    <p class="res-desc" id="resDesc"></p>
+    <ul class="traits" id="resTraits"></ul>
+    <div class="rank" id="resRank"></div>
+    <div class="pact"><span>相处之约</span><em id="resPact"></em></div>
+
+    <div class="poster-wrap">
+      <div class="lab"><p>伴灵谱 · 可保存</p><p id="posterTip">长按或点下方保存</p></div>
+      <img id="posterImg" alt="你的伴灵谱海报" width="1080" height="1440">
+      <canvas id="poster" width="1080" height="1440"></canvas>
+      <div class="actions-row2">
+        <button class="btn-solid" id="btnSave">保存海报</button>
+        <button class="btn-line" id="btnCopy">复制文案</button>
+        <button class="btn-line" id="btnAgain">再测一次</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>本测试以《山海经》原文所载异兽为底本，将八组性情维度映射到兽的形象，属趣味性情映射，不作命理、医学或心理诊断之用。相似度为相对排序结果，人与人之间不做比较。</p>
+  </footer>
+</div>
+
+<!-- ===== 视图：兽卡弹层 ===== -->
+<div class="sheet" id="sheet" aria-hidden="true">
+  <div class="sheet-inner" role="dialog" aria-modal="true" aria-labelledby="sheetName">
+    <div class="sheet-head">
+      <div>
+        <h3 class="sheet-name" id="sheetName"></h3>
+        <p class="sheet-src" id="sheetSrc"></p>
+      </div>
+      <button class="sheet-close" id="sheetClose" aria-label="关闭">×</button>
+    </div>
+    <p class="sheet-ori" id="sheetOri"></p>
+    <p class="sheet-quote" id="sheetQuote"></p>
+    <p class="sheet-type" id="sheetType"></p>
+    <p class="sheet-desc" id="sheetDesc"></p>
+    <ul class="sheet-traits" id="sheetTraits"></ul>
+    <button class="sheet-fill" id="sheetFill">用二十问测出我的伴灵</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ==== DATA ==== */
+const DIMS = [
+  {k:"显隐", hi:"显", lo:"隐", q:"你被看见的程度"},
+  {k:"刚柔", hi:"刚", lo:"柔", q:"你处理冲突的方式"},
+  {k:"谋感", hi:"谋", lo:"感", q:"你做判断的依据"},
+  {k:"群独", hi:"群", lo:"独", q:"你的能量来源"},
+  {k:"守变", hi:"守", lo:"变", q:"你与规则的关系"},
+  {k:"进退", hi:"进", lo:"退", q:"你的野心刻度"},
+  {k:"烈淡", hi:"烈", lo:"淡", q:"你的情感浓度"},
+  {k:"险稳", hi:"险", lo:"稳", q:"你对风险的胃口"}
+];
+
+const BEASTS = [
+{"n":"九尾狐","src":"南山经 · 青丘之山","ori":"有兽焉，其状如狐而九尾，其音如婴儿，能食人，食者不蛊。","type":"镜水照影型","quote":"你不是善变，你只是每一次都重新照见了自己。","desc":"你身上有一种很难被固定的东西：场合换了，你的语气、步调、甚至喜好都跟着换。别人因此说你不可信，其实你只是比别人更早察觉到，此刻该用什么样子存在。你擅长读懂房间里的空气，也擅长在别人的期待里找到自己的位置——但偶尔会忘记，并没有人要求你一直好看。","traits":[["察色","你比在场所有人都早一步知道谁不高兴"],["换形","你能变成别人需要的样子，且演得不费力"],["留锋","你笑得最软的时候，往往决定已经做完"]],"pact":"给自己留一处不需要被喜欢的地方。","v":[9,4,8,5,3,6,7,6]},
+{"n":"凤凰","src":"南山经 · 丹穴之山","ori":"有鸟焉，其状如鸡，五采而文，名曰凤皇……首文曰德，翼文曰义，背文曰礼，膺文曰仁，腹文曰信。","type":"循德自持型","quote":"你不轻易出现，因为你出现的每一次都要算数。","desc":"你对自己的要求高得有点苛刻：不是要赢，是要配得上。你不喜欢临时改口的约定，也不喜欢敷衍的场合。你身上有一种天然的体面——不吵、不抢、不解释，但谁都不会轻慢你。代价是你很少允许自己出错，也很少允许自己随便。","traits":[["分寸","你知道什么场合说什么话，且从不出格"],["自重","你的底线写在没人看得见的地方"],["稀见","你少出现，所以每次出现都有分量"]],"pact":"允许自己偶尔不体面，那不丢人。","v":[9,5,6,7,9,5,5,2]},
+{"n":"鹿蜀","src":"南山经 · 杻阳之山","ori":"有兽焉，其状如马而白首，其文如虎而赤尾，其音如谣，其名曰鹿蜀，佩之宜子孙。","type":"宜家载福型","quote":"你把自己活成了一句歌谣，孩子们唱着就长大了。","desc":"你的核心是让身边的人过得好：会做饭、记得节日、在别人吵架时把话圆回来。你不喜欢动荡，也不追求戏剧性。你的价值不在高光时刻，而在漫长的日常里——你让一个地方像家。只是很少有人问过你，你自己想要什么。","traits":[["载福","你在的地方，日子会变得好过"],["宜家","你擅长把关系经营成可以久待的样子"],["隐功","你的付出很少被计入账本"]],"pact":"今年至少为自己做一件没用的事。","v":[5,4,5,8,7,4,6,2]},
+{"n":"蛊雕","src":"南山经 · 鹿吴之山","ori":"泽更之水出焉……水有兽焉，名曰蛊雕，其状如雕而有角，其音如婴儿之音，是食人。","type":"隐声伺机型","quote":"你说话像婴儿，可你从不真的天真。","desc":"你安静、好说话、不显山露水，但心里一直在计算。你不喜欢正面冲突，更擅长等待和选择时机。你的柔软常常是策略，而不是本性——这不代表你假，只代表你懂得保护自己。你真正在意的东西，很少说出来。","traits":[["隐声","你的表达温和，信息量却很少"],["伺机","你擅长等，等到最省力的那一刻"],["藏意","你在意的事，从不摆在明面上"]],"pact":"对值得的人，把计算关掉一次。","v":[2,7,7,2,4,5,4,9]},
+{"n":"狰","src":"西山经 · 章莪之山","ori":"有兽焉，其状如赤豹，五尾一角，其音如击石，其名曰狰。","type":"五尾锐进型","quote":"你身上有五个尾巴和一个角，没有一个是为了好看。","desc":"你是锋利的实用主义者：不装饰、不迂回、不做多余的事。你的判断快，动作也快，讨厌拖泥带水。你不介意显得不好相处，因为你觉得把事做成比被喜欢重要。你的问题是有时候太锐，把提醒说成了否定。","traits":[["锐进","你出手快，且不回头"],["一角","你的立场只有一个方向"],["实用","你不做没有用处的事"]],"pact":"锋利的东西，收鞘时也要利落。","v":[6,8,5,2,5,7,7,7]},
+{"n":"穷奇","src":"西山经 · 邽山","ori":"有兽焉，其状如牛，猬毛，名曰穷奇，音如嗥狗，是食人。","type":"逆风背俗型","quote":"别人说你凶，你只是不肯按他们的方向长。","desc":"你对“大家都这样”有生理性的排斥。规则对你不是约束，而是挑衅——你更愿意先试试能不能破。你不虚伪，讨厌场面话，也因此常常得罪人。你身上有一种很原始的诚实：宁可被讨厌，也不愿配合演。","traits":[["逆风","你天然站在多数人的反面"],["直齿","你的话不留余地，但极少骗人"],["独行","你宁可一个人，也不入不对的局"]],"pact":"反叛也要挑对象，不是所有墙都值得撞。","v":[6,9,4,3,2,8,8,9]},
+{"n":"文鳐鱼","src":"西山经 · 邽山","ori":"濛水出焉……是多文鳐鱼，状如鲤鱼，鱼身而鸟翼，苍文而白首赤喙，常行西海，游于东海，以夜飞，其音如鸾，见则天下大穰。","type":"载丰夜行型","quote":"你总在夜里出发，把丰年留给天亮的人。","desc":"你相信好事会发生，并且愿意为它提前准备。你身上有一种很少见的乐观：不是天真，而是见过糟的部分之后依然选择往有光的地方游。你喜欢自由，讨厌被拴在一张固定的桌上，也常常在别人休息的时候开始真正干活。","traits":[["夜行","你的效率在没人打扰的时段最高"],["载丰","你总在替未来囤一点什么"],["远游","你的世界比你现在待的地方大"]],"pact":"把乐观分一点给现在，不只是以后。","v":[6,3,4,7,4,8,7,7]},
+{"n":"陆吾","src":"西山经 · 昆仑之丘","ori":"神陆吾司之，其神状虎身而九尾，人面而虎爪，是神也，司天之九部及帝之囿时。","type":"守阈定序型","quote":"你守着门，门里的人从来不知道门有多重。","desc":"你是那种让系统运转起来的人：把混乱排成顺序，把“差不多”改成“到这一步才算完”。你对规则不是崇拜，而是知道没有它就会有人受伤。你很少抱怨，因为抱怨不在你的解决方案里。你也会累，只是累的时候更沉默。","traits":[["定序","你能把一团乱麻排成可执行的东西"],["扛阈","你把责任接住，不让它掉到别人身上"],["沉默","你越累，话越少"]],"pact":"把“我撑不住了”也算作一条规则。","v":[5,9,8,4,9,5,4,3]},
+{"n":"英招","src":"西山经 · 槐江之山","ori":"实惟帝之平圃，神英招司之，其状马身而人面，虎文而鸟翼，徇于四海，其音如榴。","type":"理圃养物型","quote":"你养的花开在别人的园子里，你也觉得值得。","desc":"你是经营型的人：不追求站在台前，但很在意东西有没有被好好照料。你擅长把长期的事做下去——维护关系、整理流程、让一个地方慢慢变好。你不太计较署名，但会计较有没有认真做。你的成就感，来自秩序长出来的样子。","traits":[["理圃","你把长期的事当正事做"],["养物","你擅长让东西和人慢慢变好"],["让贤","你更愿意把光留给合适的人"]],"pact":"在别人的园子里，也给自己留一畦。","v":[5,6,7,6,8,5,4,4]},
+{"n":"天狗","src":"西山经 · 阴山","ori":"有兽焉，其状如狸而白首，名曰天狗，其音如榴榴，可以御凶。","type":"御凶护宅型","quote":"你不吼，屋子就以为夜里什么都没发生。","desc":"你是那种不出声的保护者：提前排除风险、把危险挡在门外，然后什么都不说。你不喜欢夸张的表达，也不擅长被人感谢——会有点不自在。你的忠诚是长期的、具体的，但你不习惯把它讲成故事。","traits":[["御凶","你把危险拦在别人看不见的地方"],["无声","你做了很多，但不说"],["长守","你的忠诚按年计算，不按次"]],"pact":"偶尔也让人知道，门是你守的。","v":[4,7,6,6,8,5,6,4]},
+{"n":"朱厌","src":"西山经 · 小次之山","ori":"有兽焉，其状如猿，而白首赤足，名曰朱厌，见则大兵。","type":"见兵先觉型","quote":"你总是最先闻到风里的铁味。","desc":"你对危险有一种提前的嗅觉：别人还在开会，你已经在想最坏的情况。你天生忧患，喜欢做预案，讨厌“到时候再说”。这种先觉救过你很多次，也让你长期处在备战状态里，很难真正松下来。","traits":[["先觉","你比所有人早半步看到问题"],["备战","你习惯为最坏的情况留一手"],["难松","你放松的时候也在监听"]],"pact":"允许有一件事，不做预案。","v":[5,8,6,3,3,6,7,9]},
+{"n":"鸾鸟","src":"西山经 · 女床之山","ori":"有鸟焉，其状如翟而五采文，名曰鸾鸟，见则天下安宁。","type":"自歌安世型","quote":"你不争鸣，你只在自己的山上唱歌。","desc":"你不需要被比较，也不太需要被追随。你有自己一套审美标准：宁可少，也要对。你在场的时候，气氛会莫名其妙地缓和下来，因为你身上没有攻击性——但也没有人可以随便越过你。你对“安静地过得好”这件事，有很坚定的向往。","traits":[["自歌","你的快乐不需要观众"],["缓场","你在的地方，火气会自己降下来"],["有尺","你不争，但你有标准"]],"pact":"别把不争，活成不敢。","v":[7,3,5,6,8,4,4,2]},
+{"n":"青鸟","src":"西山经 · 三危之山","ori":"三危之山，三青鸟居之。……三青鸟主为西王母取食者。","type":"传书守约型","quote":"你替别人送了很多信，只有一封是写给自己的。","desc":"你是关系里的连接点：谁的近况、谁的心结、谁该被拉进这个群，你都清楚。你擅长把两件不相干的事接上，也擅长在中间传话而不失真。你重承诺，答应过的事会一直记着。但你很少主动说起自己的去处，好像你天生就是那条路，不是那个要到的地方。","traits":[["传信","你总在替别人把话带到"],["守约","你答应的事，比合同还有效"],["居中","你站在中间，两头都照顾到"]],"pact":"偶尔让别人替你跑一趟。","v":[4,4,7,6,7,5,5,5]},
+{"n":"混沌","src":"西山经 · 天山","ori":"有神焉，其状如黄囊，赤如丹火，六足四翼，浑敦无面目，是识歌舞，实为帝江也。","type":"无面浑游型","quote":"你没有脸，所以谁都能在你身上看见自己。","desc":"你很难被定义：喜欢的、擅长的、立场，都随时间流动。你不抗拒变化，甚至享受那种还没定型的自由。你身上有一种浑然的气，让人放松，也让人抓不住。你不是没有自我，只是你的自我不肯被压成一张固定的脸。","traits":[["无面","你不愿意被一句话说完"],["浑游","你能自在地待在不确定里"],["通感","你对音乐、气氛、节奏格外敏感"]],"pact":"给流动的自己也留一个可以靠岸的地方。","v":[3,5,3,3,2,3,6,5]},
+{"n":"饕餮","src":"北山经 · 钩吾之山","ori":"有兽焉，其状如羊身人面，其目在腋下，虎齿人爪，其音如婴儿，名曰狍鸮，是食人。","type":"尽取不遗型","quote":"你什么都想要，因为你不信明天还有。","desc":"你的欲望明亮、不掩饰：想要更多认可、更多体验、更多可能。你不擅长“够”这个字，也很难对正在错过的东西视而不见。这种饥饿让你把事情做得又多又猛，也让你在停下来的时候感到空。你不是贪，你只是怕。","traits":[["尽取","你很少主动说“我不要了”"],["炽欲","你的动力来自不满足"],["空处","拿到之后，反而安静下来"]],"pact":"试着一件事只做到八分，留两分白。","v":[5,7,4,3,2,9,9,7]},
+{"n":"窫窳","src":"北山经 · 少咸之山","ori":"有兽焉，其状如牛而赤身、人面马足，名曰窫窳，其音如婴儿，是食人。","type":"负创执念型","quote":"你被伤过一次，此后每一次都先咬住再说。","desc":"你的防御是先发制人的：在别人可能伤害你之前，你已经把自己武装好了。你记得每一次被辜负的细节，也记得自己当时没能还手的部分。这让你变得强，也让你很难相信“这次会不一样”。你的狠，大多是给自己看的。","traits":[["负创","你把旧伤带在身上当铠甲"],["先啮","你习惯抢先出手，避免再被伤"],["难信","你验证一个人的时间比别人长"]],"pact":"试着让一个人，在不设防的状态下靠近你一次。","v":[4,7,4,2,3,5,9,7]},
+{"n":"开明兽","src":"海内西经 · 昆仑","ori":"开明兽身大类虎而九首，皆人面，东向立昆仑上。","type":"九面巡关型","quote":"你同时看着九个方向，所以没人看见你的正面。","desc":"你的注意力是分层的：一边说话一边在算风险，一边答应一边在找漏洞。你警觉，不轻易相信“应该没问题”。这种敏感让你避开过很多坑，也让你很难真正放松。你给人的印象是可靠但不亲近——因为你把所有的脸都用在了看路上。","traits":[["九视","你同时处理着好几条信息线"],["巡关","你总在检查别人没检查的地方"],["难近","你很少把背面留给别人"]],"pact":"偶尔只用一双眼睛看人，不预判。","v":[7,7,9,4,8,4,4,3]},
+{"n":"雷神","src":"海内东经 · 雷泽","ori":"雷泽中有雷神，龙身而人头，鼓其腹，在吴西。","type":"鼓腹成声型","quote":"你不需要解释，你的腹中自有雷声。","desc":"你天生带气场：走进一个房间，别人会先调整坐姿。你相信结果比措辞重要，所以经常跳过解释直接推进。你不喜欢纠缠细节和情绪，觉得那是浪费时间。但你的直接落在亲近的人身上会变成压力，而你可能很久都察觉不到。","traits":[["威势","你的存在本身就改变了场域"],["直行","你跳过解释，直接进入执行"],["钝处","你不太接得住别人的委屈"]],"pact":"把音量留给事情，把轻声留给身边的人。","v":[8,9,4,4,4,7,8,7]},
+{"n":"相柳","src":"海外北经","ori":"共工之臣曰相柳氏，九首，以食于九山。相柳之所抵，厥为泽溪。","type":"拓土无餍型","quote":"你走过的路都成了沼泽，你却以为那是灌溉。","desc":"你的进取心很强，且很少满足：做成一件，马上看下一件。你能同时推进很多件事，也真的能把它们推下去。但你的扩张常常没有边界感——你不觉得占多一点有什么问题，直到发现身边的人已经退到没有位置的地方。","traits":[["多首","你同时咬住好几个目标"],["无餍","你很少对“够了”有感觉"],["泽及","你走过的地方，格局会变，代价也会留"]],"pact":"每扩张一步，先问一句：谁被我挤到了。","v":[5,9,6,5,2,9,6,8]},
+{"n":"应龙","src":"大荒北经","ori":"应龙已杀蚩尤，又杀夸父，乃去南方处之，故南方多雨。","type":"蓄势成事型","quote":"你把雨落在了别人的田里，然后独自回到南方。","desc":"你是那种平时不太出声、关键时刻扛住全部的人。别人以为你天生稳，其实你只是很清楚事情崩了会怎样，所以提前把所有漏洞补上。你做的很多事不会被计入功劳，因为它们没有发生——这是你最容易吃亏的地方。","traits":[["蓄势","你在等一个真正值得用力的时刻"],["兜底","你习惯替所有人想第二步"],["南归","事成之后你退得比谁都快"]],"pact":"别只在收尾时才让人看见你。","v":[8,9,6,6,8,9,6,7]},
+{"n":"烛龙","src":"大荒北经 · 章尾山","ori":"有神，人面蛇身而赤，直目正乘，其瞑乃晦，其视乃明……是烛九阴，是谓烛龙。","type":"幽夜掌灯型","quote":"你闭上眼，世界就暗了；你睁开眼，别人以为天亮了。","desc":"你的能量是向内收的：不解释、不社交、不表态，但心里始终有一套完整的秩序在运转。你在沉默里做的判断，往往比会议上说的更准。你不喜欢被打断，也不喜欢别人替你安排节奏——你需要对什么时候开始、什么时候结束，有绝对的控制权。","traits":[["独明","你的判断在没有掌声时最清醒"],["掌序","你对时间和节奏有近乎苛刻的要求"],["深渊","你一个人待着的时候，才真的在充电"]],"pact":"定期把心里那套秩序，翻译一句给别人听。","v":[3,9,8,2,7,4,3,3]},
+{"n":"九凤","src":"大荒北经 · 北极天柜山","ori":"有神，九首人面鸟身，名曰九凤。","type":"高枝独栖型","quote":"你站得太高，风替你回答了所有问题。","desc":"你有很强的疆域感：可以合作，但不接受被安排；可以亲近，但需要保持能随时离开的距离。你的眼光看得比同龄人远，也因此常常觉得周围的话题太小。你不缺能力，缺的是愿意把话讲给听不懂的人听的耐心。","traits":[["高栖","你的标准比身边的人高一档"],["多面","你能同时处理很多方向的事"],["疆界","你不介意一个人，但很介意被侵入"]],"pact":"让别人有机会跟上你，而不是只看见你的背影。","v":[5,8,6,2,7,5,5,4]},
+{"n":"夔牛","src":"大荒东经 · 流波山","ori":"有兽，状如牛，苍身而无角，一足，出入水则必风雨，其光如日月，其声如雷，其名曰夔。","type":"一足惊雷型","quote":"你一声不出，直到那一声必须是你。","desc":"你的存在感是脉冲式的：大部分时间安静、甚至有点钝，但一旦事情到了临界点，你会突然爆发，把所有人震住。你不擅长持续地表达，擅长一次定音。问题也在这里——你常常等到“必须”才开口，于是别人以为你一直没有意见。","traits":[["一足","你不需要很多支点，一个就够"],["惊雷","你一旦开口，事情就转向"],["蓄压","你把情绪存起来，直到存不住"]],"pact":"在小事上先说一句，别都攒到最后。","v":[9,9,3,3,4,8,9,8]},
+{"n":"鲛人","src":"海内北经 · 陵鱼","ori":"陵鱼人面，手足，鱼身，在海中。","type":"泣珠怀人型","quote":"你哭的时候，眼泪先变成了别人的珍藏。","desc":"你对人的在意是具体的：记得谁不吃香菜、谁那天声音不对、谁说过一句被所有人忽略的话。你的感受浓度比大多数人高，容易被一件小事打动，也容易为别人的处境难很久。你不太会索取，习惯把“我需要”改写成“你还好吗”。","traits":[["泣珠","你的眼泪是给别人的，不是给自己的"],["记人","你记得所有细节，包括别人忘掉的那些"],["不索","你很少开口要，然后默默把账记平"]],"pact":"试着把“我有点难过”原句说出口。","v":[3,2,4,6,5,3,8,4]}
+];
+
+const QUESTIONS = [
+{d:0,q:"入山前夜，只许带一样东西。你带——",o:[["什么都不带，省得被记住",2],["一囊清水，够走到哪算哪",4],["一卷素帛，把路线画给别人看",7],["一束火把，让山里知道有人来了",9]]},
+{d:7,q:"雾起三岔口，路牌被雾吞了。你——",o:[["朝风声最大的那条走",9],["原地坐下，等雾自己散",2],["听水声判方向，摸过去",7],["走最宽的那条，稳一点",4]]},
+{d:1,q:"你听见林中幼兽的哀鸣。",o:[["直接过去，把它抱起来",9],["远远绕着走，别惊动什么",2],["把猎者引开，再回来",7],["先看爪印，确认安全再动",4]]},
+{d:1,q:"同行的人低声道：你太像异类了。",o:[["笑一笑，认了",2],["当面问他：异类哪里不好",9],["不辩，继续走",4],["记下这句话，改天还他",7]]},
+{d:2,q:"石壁上有一处无人记载的兽形刻痕。",o:[["誊进帛书，标清方位尺寸",9],["拓下来，带出山去",7],["刺破手指，替它补上一笔",4],["只看，记住就够了",2]]},
+{d:3,q:"队伍要选一个人领路。",o:[["站出来，你走最前",9],["你画地图、照应所有人",7],["推举别人，你在旁边补位",4],["不参与，跟着走",2]]},
+{d:3,q:"荒祠里只有一张干净的席子。",o:[["一人一半，谁也别客气",9],["你不睡，替所有人守这一夜",7],["你睡门口，风先进你",4],["让给别人睡，你靠墙坐",2]]},
+{d:1,q:"强敌拦路，它比你们所有人都强。",o:[["迎上去，先打一场",9],["找它的弱点，等它先动",7],["上前谈条件，先拖住它",4],["带人先撤，一个都不能少",2]]},
+{d:6,q:"你重伤时，有人背着你走了十里。",o:[["说不出话，只把手握得更紧",9],["记下了，往后加倍还",7],["只说两个字：值了",4],["不习惯欠人，第二天就还清",2]]},
+{d:7,q:"山神说：你可以听得见山川说话，代价是再听不懂人话。",o:[["换。听得见山，比听得懂人有用",9],["换一半，留一只耳朵给人",7],["先试三天，再决定",4],["不换。人间的话你还没听够",2]]},
+{d:0,q:"有人在众人面前误传了你的一句话。",o:[["不解释，让它过去",2],["当面说清，一字不让",9],["只跟一个人说",4],["用行动证明，不开口",7]]},
+{d:6,q:"月光下，你的影子长出了不属于你的形状。",o:[["蹲下来，试着和它说话",9],["想看清它到底是什么",7],["告诉最信任的那个人",4],["当作没看见，继续走",2]]},
+{d:2,q:"长路的尽头是一道门，门后无人回来。",o:[["记下位置，备好了再来",9],["先想清门后可能是什么，再推",7],["在门外坐一夜，天亮再定",4],["推门进去",2]]},
+{d:5,q:"最后一口水，只剩你和一只濒死的兽。",o:[["全给它",2],["自己喝，然后陪它到最后",9],["各一半",7],["留给更远的路上可能遇到的人",4]]},
+{d:4,q:"这趟旅程，你要怎么记下来。",o:[["只记地名和方向，规规矩矩",9],["记下每一张脸、每一句话",7],["写一本没人会信的册子",3],["不记。风会替我记得",2]]},
+{d:4,q:"旧约未竟，新的邀请来了。",o:[["做完旧约，谢绝新的",9],["两件一起做，都别落",7],["放下旧约，新的更值得",3],["把选择交回给来邀请的人",2]]},
+{d:7,q:"你遇见同类的尸体，身上有你熟悉的印记。",o:[["取走那枚印记，连带它的名字",9],["先查清它是怎么死的",7],["埋掉它，继续走",4],["守三天，再走",2]]},
+{d:5,q:"山神给你一次机会，只选一样。",o:[["力量",9],["智慧",7],["自由",3],["长久的陪伴",2]]},
+{d:6,q:"有人要你以真名相许。",o:[["立刻给出",9],["说：等我走完这段路",7],["给出真名，同时留一条退路",4],["给一个能用很多次的假名",2]]},
+{d:0,q:"千年后，你的伴灵被写进一页残卷。你希望那一句是——",o:[["它来过，改变了天气",9],["它守住了那道门",7],["它谁也没伤，也没被谁伤",3],["没人知道它是什么，但它确实存在过",2]]}
+];
+/* ==== END DATA ==== */
+</script>
+<script>
+/* ===== 工具 ===== */
+const $ = (id) => document.getElementById(id);
+const TICKS = ["甲","乙","丙","丁"];
+let answers = new Array(QUESTIONS.length).fill(null);
+let qi = 0;
+let cur = null;
+
+/* ===== 兽印：由八维向量生成的符文 ===== */
+function runeMark(v){
+  let lines = "";
+  for (let i = 0; i < 8; i++){
+    const a = (Math.PI / 4) * i - Math.PI / 2;
+    const r0 = 13, len = 3 + (v[i] / 10) * 26;
+    const x0 = 50 + Math.cos(a) * r0, y0 = 50 + Math.sin(a) * r0;
+    const x1 = 50 + Math.cos(a) * (r0 + len), y1 = 50 + Math.sin(a) * (r0 + len);
+    lines += '<line x1="' + x0.toFixed(1) + '" y1="' + y0.toFixed(1) + '" x2="' + x1.toFixed(1) + '" y2="' + y1.toFixed(1) + '"></line>';
+  }
+  return '<rect x="6" y="6" width="88" height="88" fill="none" stroke="currentColor" stroke-width="1" opacity=".3"></rect>'
+       + '<g stroke="currentColor" stroke-width="1.7" stroke-linecap="round">' + lines + '</g>';
+}
+
+/* ===== 计分 ===== */
+function profile(){
+  const sum = new Array(8).fill(0), cnt = new Array(8).fill(0);
+  answers.forEach((lv, i) => {
+    if (lv == null) return;
+    const d = QUESTIONS[i].d;
+    sum[d] += lv; cnt[d] ++;
+  });
+  return sum.map((s, i) => cnt[i] ? s / cnt[i] : 5);
+}
+function rank(p){
+  return BEASTS.map((b) => {
+    let s = 0;
+    for (let i = 0; i < 8; i++) s += (b.v[i] - p[i]) * (b.v[i] - p[i]);
+    return { b: b, d: Math.sqrt(s) };
+  }).sort((x, y) => x.d - y.d);
+}
+function pctOf(d){
+  return Math.max(70, Math.min(96, Math.round(96 - 1.95 * d)));
+}
+function settle(list){
+  const out = list.slice(0, 3).map((o) => ({ b: o.b, p: pctOf(o.d) }));
+  out[1].p = Math.min(out[1].p, out[0].p - 1);
+  out[2].p = Math.min(out[2].p, out[1].p - 1);
+  return out;
+}
+
+/* ===== 视图切换 ===== */
+function show(name){
+  ["viewCover","viewQuiz","viewResult"].forEach((id) => { $(id).hidden = (id !== name); });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ===== 题库渲染 ===== */
+function renderQ(){
+  const q = QUESTIONS[qi];
+  $("qNow").textContent = String(qi + 1).padStart(2, "0");
+  $("qBar").style.width = ((qi + 1) / QUESTIONS.length * 100).toFixed(2) + "%";
+  $("qText").textContent = q.q;
+
+  const dots = $("qDots");
+  if (!dots.childElementCount){
+    for (let i = 0; i < QUESTIONS.length; i++) dots.appendChild(document.createElement("i"));
+  }
+  [...dots.children].forEach((el, i) => el.className = i <= qi ? "on" : "");
+
+  const box = $("qOpts");
+  box.innerHTML = "";
+  q.o.forEach(([txt, lv], i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "opt" + (answers[qi] === lv && answers[qi] !== null ? " picked" : "");
+    btn.style.animationDelay = (i * 45) + "ms";
+    btn.innerHTML = '<span class="tick">' + TICKS[i] + '</span><span class="txt">' + txt + '</span>';
+    btn.addEventListener("click", () => pick(lv, btn));
+    box.appendChild(btn);
+  });
+  $("btnBack").style.visibility = qi === 0 ? "hidden" : "visible";
+}
+
+let locked = false;
+function pick(lv, btn){
+  if (locked) return;
+  locked = true;
+  answers[qi] = lv;
+  [...$("qOpts").children].forEach((el) => el.classList.remove("picked"));
+  btn.classList.add("picked");
+  setTimeout(() => {
+    locked = false;
+    if (qi < QUESTIONS.length - 1){ qi++; renderQ(); }
+    else finish();
+  }, 240);
+}
+
+/* ===== 结果 ===== */
+function finish(){
+  const p = profile();
+  const top = settle(rank(p));
+  cur = { p: p, top: top };
+  renderResult();
+  show("viewResult");
+}
+
+function renderResult(){
+  const main = cur.top[0].b;
+  $("resName").textContent = main.n;
+  $("resSrc").textContent = main.src;
+  $("resOri").textContent = main.ori;
+  $("resPct").textContent = cur.top[0].p;
+  $("resQuote").textContent = main.quote;
+  $("resType").textContent = main.type;
+  $("resDesc").textContent = main.desc;
+  $("resRune").innerHTML = runeMark(main.v);
+
+  const dims = $("resDims");
+  dims.innerHTML = "";
+  DIMS.forEach((dm, i) => {
+    const val = cur.p[i];
+    const pos = Math.max(3, Math.min(97, val / 10 * 100));
+    const hi = Math.abs(val - 5) >= 1.5 ? " hi" : "";
+    const row = document.createElement("div");
+    row.className = "dim-row";
+    row.innerHTML = '<span>' + dm.k + '</span>'
+      + '<span class="dim-track"><i class="dim-dot' + hi + '" style="left:' + pos.toFixed(1) + '%"></i></span>'
+      + '<span class="dim-val">' + val.toFixed(1) + '</span>';
+    dims.appendChild(row);
+  });
+
+  const tr = $("resTraits");
+  tr.innerHTML = "";
+  main.traits.forEach(([k, d]) => {
+    const li = document.createElement("li");
+    li.className = "trait";
+    li.innerHTML = '<span class="k">' + k + '</span><span class="d">' + d + '</span>';
+    tr.appendChild(li);
+  });
+
+  const rk = $("resRank");
+  rk.innerHTML = "";
+  [["第二", cur.top[1]], ["第三", cur.top[2]]].forEach(([no, o]) => {
+    const row = document.createElement("div");
+    row.className = "rank-row";
+    row.innerHTML = '<span class="no">' + no + '</span><span class="nm">' + o.b.n + '</span><span class="pct">' + o.p + '%</span>';
+    rk.appendChild(row);
+  });
+
+  $("resPact").textContent = main.pact;
+
+  drawPosterSoon();
+}
+
+/* ===== 图鉴 ===== */
+function buildGrid(){
+  const grid = $("beastGrid");
+  BEASTS.forEach((b) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "beast-cell";
+    btn.innerHTML = '<svg class="rune" viewBox="0 0 100 100" aria-hidden="true">' + runeMark(b.v) + '</svg>'
+      + '<div><div class="cell-name">' + b.n + '</div><div class="cell-type">' + b.type + '</div></div>';
+    btn.addEventListener("click", () => openSheet(b));
+    grid.appendChild(btn);
+  });
+}
+
+function openSheet(b){
+  $("sheetName").textContent = b.n;
+  $("sheetSrc").textContent = b.src;
+  $("sheetOri").textContent = b.ori;
+  $("sheetQuote").textContent = b.quote;
+  $("sheetType").textContent = b.type;
+  $("sheetDesc").textContent = b.desc;
+  const ul = $("sheetTraits");
+  ul.innerHTML = "";
+  b.traits.forEach(([k, d]) => {
+    const li = document.createElement("li");
+    li.className = "trait";
+    li.innerHTML = '<span class="k">' + k + '</span><span class="d">' + d + '</span>';
+    ul.appendChild(li);
+  });
+  $("sheet").classList.add("on");
+  $("sheet").setAttribute("aria-hidden", "false");
+}
+function closeSheet(){
+  $("sheet").classList.remove("on");
+  $("sheet").setAttribute("aria-hidden", "true");
+}
+
+/* ===== 海报 ===== */
+const POSTER = { w: 1080, h: 1440, bg: "#EAE4D5", ink: "#161A15", soft: "#4C4B41", cin: "#B5432D", line: "rgba(22,26,21,.24)" };
+
+function spaced(ctx, txt, x, y, gap){
+  let cx = x;
+  for (const ch of txt){ ctx.fillText(ch, cx, y); cx += ctx.measureText(ch).width + gap; }
+  return cx - gap;
+}
+function wrapCJK(ctx, txt, maxW){
+  const lines = []; let line = "";
+  for (const ch of txt){
+    if (line && ctx.measureText(line + ch).width > maxW){ lines.push(line); line = ch; }
+    else line += ch;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+let posterReady = false;
+function drawPosterSoon(){
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(() => drawPoster()).catch(() => drawPoster());
+    setTimeout(() => { if (!posterReady) drawPoster(); }, 900);
+  } else drawPoster();
+}
+
+function runeOnCanvas(ctx, v, x, y, s, alpha){
+  const cx = x + s / 2, cy = y + s / 2, r0 = s * 0.06;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = POSTER.ink; ctx.lineWidth = 1.3;
+  ctx.strokeRect(x, y, s, s);
+  ctx.strokeStyle = POSTER.ink; ctx.lineWidth = 1.6;
+  const k = (s * 0.315) / 10;
+  for (let i = 0; i < 8; i++){
+    const a = (Math.PI / 4) * i - Math.PI / 2;
+    const len = (3 + v[i]) * k;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0);
+    ctx.lineTo(cx + Math.cos(a) * (r0 + len), cy + Math.sin(a) * (r0 + len));
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawPoster(){
+  if (!cur) return;
+  const ctx = $("poster").getContext("2d");
+  const W = POSTER.w, H = POSTER.h;
+  const serif = '"Noto Serif SC","Songti SC","STSong",serif';
+  const main = cur.top[0].b;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = POSTER.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // 纸纹
+  let seed = 20261114;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  for (let i = 0; i < 2400; i++){
+    const x = rnd() * W, y = rnd() * H, r = 0.5 + rnd() * 1.4;
+    ctx.fillStyle = "rgba(22,26,21," + (0.02 + rnd() * 0.05).toFixed(3) + ")";
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 6.284); ctx.fill();
+  }
+  // 上下极淡的压边
+  const vg = ctx.createLinearGradient(0, 0, 0, H);
+  vg.addColorStop(0, "rgba(22,26,21,.055)");
+  vg.addColorStop(0.35, "rgba(22,26,21,0)");
+  vg.addColorStop(1, "rgba(22,26,21,.035)");
+  ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+
+  // 双层细框
+  ctx.strokeStyle = "rgba(22,26,21,.32)"; ctx.lineWidth = 1;
+  ctx.strokeRect(46, 46, W - 92, H - 92);
+  ctx.strokeStyle = "rgba(22,26,21,.12)";
+  ctx.strokeRect(60, 60, W - 120, H - 120);
+
+  ctx.textBaseline = "alphabetic";
+
+  // 眉头
+  ctx.fillStyle = POSTER.soft;
+  ctx.font = "28px " + serif;
+  spaced(ctx, "山海经 · 伴灵谱", 92, 122, 9);
+  ctx.strokeStyle = POSTER.line; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(92, 154); ctx.lineTo(W - 92, 154); ctx.stroke();
+
+  // 兽印
+  runeOnCanvas(ctx, main.v, W - 92 - 152, 74, 152, 0.62);
+
+  // 标签与兽名
+  ctx.fillStyle = POSTER.soft;
+  ctx.font = "28px " + serif;
+  spaced(ctx, "你的伴生灵宠", 96, 216, 8);
+
+  const name = main.n;
+  ctx.fillStyle = POSTER.ink;
+  ctx.font = "900 " + (name.length <= 2 ? 286 : 242) + "px " + serif;
+  ctx.fillText(name, 86, 490);
+
+  ctx.fillStyle = POSTER.soft;
+  ctx.font = "28px " + serif;
+  spaced(ctx, main.src, 96, 552, 4);
+
+  // 相似度
+  const num = String(cur.top[0].p);
+  ctx.fillStyle = POSTER.ink;
+  ctx.font = "900 128px " + serif;
+  ctx.fillText(num, 96, 690);
+  const nw = ctx.measureText(num).width;
+  ctx.font = "40px " + serif;
+  ctx.fillText("%", 96 + nw + 10, 678);
+  ctx.fillStyle = POSTER.soft;
+  ctx.font = "25px " + serif;
+  spaced(ctx, "性情相似度", 96 + nw + 80, 686, 3);
+
+  ctx.strokeStyle = POSTER.line;
+  ctx.beginPath(); ctx.moveTo(96, 742); ctx.lineTo(W - 96, 742); ctx.stroke();
+
+  // 判词
+  ctx.fillStyle = POSTER.ink;
+  ctx.font = "500 36px " + serif;
+  const qLines = wrapCJK(ctx, main.quote, 776);
+  const qTop = 806, qLh = 58;
+  qLines.forEach((ln, i) => ctx.fillText(ln, 116, qTop + i * qLh));
+  const qBottom = qTop + (qLines.length - 1) * qLh;
+  ctx.strokeStyle = POSTER.cin; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(80, qTop - 40); ctx.lineTo(80, qBottom + 10); ctx.stroke();
+
+  // 原文
+  ctx.fillStyle = "rgba(76,75,65,.85)";
+  ctx.font = "22px " + serif;
+  spaced(ctx, "原 文", 96, 920, 5);
+  ctx.fillStyle = "rgba(76,75,65,.95)";
+  ctx.font = "23px " + serif;
+  const oLines = wrapCJK(ctx, "「" + main.ori + "」", 800);
+  oLines.forEach((ln, i) => ctx.fillText(ln, 96, 966 + i * 36));
+
+  // 分隔线与型名
+  ctx.strokeStyle = POSTER.line;
+  ctx.beginPath(); ctx.moveTo(96, 1034); ctx.lineTo(W - 96, 1034); ctx.stroke();
+  ctx.fillStyle = POSTER.cin;
+  ctx.font = "700 32px " + serif;
+  spaced(ctx, main.type, 96, 1080, 5);
+
+  // 三特质
+  ctx.fillStyle = POSTER.ink;
+  ctx.font = "500 30px " + serif;
+  let tx = 96;
+  main.traits.forEach(([k], i) => {
+    ctx.fillText(k, tx, 1130);
+    tx += ctx.measureText(k).width;
+    if (i < 2){
+      ctx.strokeStyle = POSTER.line; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(tx + 26, 1100); ctx.lineTo(tx + 26, 1134); ctx.stroke();
+      tx += 52;
+    }
+  });
+
+  // 相处之约
+  ctx.fillStyle = POSTER.soft;
+  ctx.font = "24px " + serif;
+  ctx.fillText("与你相处：", 96, 1186);
+  ctx.fillStyle = "rgba(22,26,21,.86)";
+  ctx.fillText(main.pact, 96 + ctx.measureText("与你相处：").width + 14, 1186);
+
+  // 二三名
+  ctx.fillStyle = "rgba(76,75,65,.9)";
+  ctx.font = "24px " + serif;
+  spaced(ctx, "第二 · " + cur.top[1].b.n + "　" + cur.top[1].p + "%", 96, 1252, 2);
+  spaced(ctx, "第三 · " + cur.top[2].b.n + "　" + cur.top[2].p + "%", 96, 1292, 2);
+
+  // 印章
+  const sx = W - 226, sy = H - 250;
+  ctx.fillStyle = POSTER.cin;
+  ctx.fillRect(sx, sy, 132, 132);
+  ctx.strokeStyle = "rgba(243,237,224,.55)"; ctx.lineWidth = 1;
+  ctx.strokeRect(sx + 7, sy + 7, 118, 118);
+  ctx.fillStyle = "#F3EDE0";
+  ctx.font = "700 46px " + serif;
+  ctx.fillText("伴", sx + 22, sy + 60);
+  ctx.fillText("灵", sx + 22, sy + 116);
+
+  // 页脚
+  ctx.fillStyle = "rgba(76,75,65,.9)";
+  ctx.font = "23px " + serif;
+  spaced(ctx, "山海有兽，各有其性", 96, H - 100, 3);
+  ctx.fillStyle = "rgba(76,75,65,.6)";
+  ctx.font = "19px " + serif;
+  spaced(ctx, "八维性情映射 · 不作命理判断", 96, H - 66, 2);
+
+  $("posterImg").src = ctx.canvas.toDataURL("image/png");
+  posterReady = true;
+}
+
+/* ===== 事件 ===== */
+$("btnStart").addEventListener("click", () => {
+  answers = new Array(QUESTIONS.length).fill(null);
+  qi = 0; renderQ(); show("viewQuiz");
+});
+$("btnPeek").addEventListener("click", () => {
+  $("atlasBlock").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+$("jumpAtlas").addEventListener("click", () => {
+  show("viewCover");
+  setTimeout(() => $("atlasBlock").scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+});
+$("btnBack").addEventListener("click", () => { if (qi > 0){ qi--; renderQ(); } });
+$("btnQuit").addEventListener("click", () => { show("viewCover"); });
+$("btnAgain").addEventListener("click", () => {
+  answers = new Array(QUESTIONS.length).fill(null);
+  qi = 0; posterReady = false; renderQ(); show("viewQuiz");
+});
+$("btnSave").addEventListener("click", () => {
+  const a = document.createElement("a");
+  a.download = "伴灵谱-" + cur.top[0].b.n + ".png";
+  a.href = $("poster").toDataURL("image/png");
+  a.click();
+  toast("海报已保存");
+});
+$("btnCopy").addEventListener("click", () => {
+  const b = cur.top[0].b;
+  const txt = "我在《山海经》里测出的伴生灵宠是「" + b.n + "」（" + b.type + "），相似度 " + cur.top[0].p + "%。\n"
+    + "“" + b.quote + "”\n"
+    + "#选择你的伴生灵宠 #山海经 #伴灵谱 #性格测试";
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(() => toast("文案已复制")).catch(() => fallbackCopy(txt));
+  } else fallbackCopy(txt);
+});
+function fallbackCopy(txt){
+  const ta = document.createElement("textarea");
+  ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); toast("文案已复制"); } catch (e) { toast("复制失败，请手动选择"); }
+  document.body.removeChild(ta);
+}
+let toastTimer = null;
+function toast(msg){
+  const el = $("toast");
+  el.textContent = msg; el.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("on"), 1800);
+}
+
+$("sheetClose").addEventListener("click", closeSheet);
+$("sheet").addEventListener("click", (e) => { if (e.target === $("sheet")) closeSheet(); });
+$("sheetFill").addEventListener("click", () => {
+  closeSheet();
+  answers = new Array(QUESTIONS.length).fill(null);
+  qi = 0; renderQ(); show("viewQuiz");
+});
+document.addEventListener("keydown", (e) => {
+  if (!$("sheet").classList.contains("on")) return;
+  if (e.key === "Escape") closeSheet();
+});
+
+/* ===== 初始化 ===== */
+buildGrid();
+renderQ();
+</script>
+</body>
+</html>
