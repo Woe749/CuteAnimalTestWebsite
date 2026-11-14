@@ -281,6 +281,29 @@ body::before{
 }
 .sheet-fill:hover{border-color:var(--paper-2)}
 
+/* ========== 密码锁 ========== */
+.lock{
+  position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+  background:var(--void);padding:22px;
+}
+.lock-inner{
+  width:100%;max-width:340px;text-align:center;
+}
+.lock-inner .mark{font-size:14px;letter-spacing:.2em;color:var(--paper-2);margin-bottom:30px;display:block}
+.lock-inner h2{font-family:var(--serif);font-size:24px;font-weight:700;letter-spacing:.08em;margin-bottom:22px}
+.lock-inner input{
+  width:100%;background:transparent;border:1px solid var(--line);color:var(--paper);
+  font-family:var(--sans);font-size:15px;padding:14px 16px;letter-spacing:.1em;
+  outline:none;border-radius:0;text-align:center;
+}
+.lock-inner input:focus{border-color:var(--cin)}
+.lock-inner button{
+  margin-top:16px;width:100%;background:var(--cin);color:#F5EFE3;border:none;
+  font-family:var(--serif);font-size:15px;letter-spacing:.22em;padding:15px;cursor:pointer;
+}
+.lock-inner button:hover{background:var(--cin-2)}
+.lock-err{color:var(--cin-2);font-size:12px;letter-spacing:.08em;margin-top:12px;min-height:16px}
+
 /* ========== 页脚 ========== */
 footer{border-top:1px solid var(--line-2);margin-top:10px;padding:22px 0 40px}
 footer p{font-size:11.5px;line-height:1.9;color:var(--dim);letter-spacing:.04em;max-width:34em}
@@ -300,7 +323,18 @@ footer p{font-size:11.5px;line-height:1.9;color:var(--dim);letter-spacing:.04em;
 </head>
 <body>
 
-<div class="shell">
+<!-- ===== 密码锁 ===== -->
+<div class="lock" id="lockScreen">
+  <div class="lock-inner">
+    <span class="mark">山海经 · <b>伴灵谱</b></span>
+    <h2>请输入口令</h2>
+    <input type="password" id="lockInput" placeholder="输入密码后入山" autocomplete="off">
+    <button id="lockBtn">入 山</button>
+    <p class="lock-err" id="lockErr"></p>
+  </div>
+</div>
+
+<div class="shell" id="mainShell" style="display:none;">
   <div class="topbar">
     <span class="mark">山海经 · <b>伴灵谱</b></span>
     <button class="jump" id="jumpAtlas">二十四兽</button>
@@ -514,6 +548,37 @@ const TICKS = ["甲","乙","丙","丁"];
 let answers = new Array(QUESTIONS.length).fill(null);
 let qi = 0;
 let cur = null;
+
+/* ===== 密码锁 ===== */
+const PASSWORD = "yuwen126";
+(function initLock(){
+  const lock = $("lockScreen");
+  const shell = $("mainShell");
+  const input = $("lockInput");
+  const err = $("lockErr");
+  function unlock(){
+    if (input.value === PASSWORD){
+      lock.style.display = "none";
+      shell.style.display = "";
+      try { sessionStorage.setItem("ling_unlocked","1"); } catch(e){}
+    } else {
+      err.textContent = "口令不对，再试一次。";
+      input.value = "";
+      input.focus();
+    }
+  }
+  // 已解锁则跳过
+  try {
+    if (sessionStorage.getItem("ling_unlocked") === "1"){
+      lock.style.display = "none";
+      shell.style.display = "";
+      return;
+    }
+  } catch(e){}
+  $("lockBtn").addEventListener("click", unlock);
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+  input.focus();
+})();
 
 /* ===== 兽印：由八维向量生成的符文 ===== */
 function runeMark(v){
