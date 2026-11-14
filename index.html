@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -390,7 +390,7 @@ footer p{font-size:11.5px;line-height:1.9;color:var(--dim);letter-spacing:.04em;
         <h2 class="res-name" id="resName"></h2>
         <p class="res-src" id="resSrc"></p>
       </div>
-      <svg class="rune" id="resRune" viewBox="0 0 100 100" aria-hidden="true"></svg>
+      <img class="rune" id="resRune" src="" alt="兽印" style="object-fit: contain; transform: scale(4); transform-origin: top right; margin-right: 30px; margin-top: 30px;">
     </div>
     <div class="res-ori"><span>原文</span><q id="resOri"></q></div>
     <div class="score-band">
@@ -621,7 +621,7 @@ function renderResult(){
   $("resQuote").textContent = main.quote;
   $("resType").textContent = main.type;
   $("resDesc").textContent = main.desc;
-  $("resRune").innerHTML = runeMark(main.v);
+  $("resRune").src = "images/" + main.n + ".png"; 
 
   const dims = $("resDims");
   dims.innerHTML = "";
@@ -785,7 +785,26 @@ function drawPoster(){
   ctx.beginPath(); ctx.moveTo(92, 154); ctx.lineTo(W - 92, 154); ctx.stroke();
 
   // 兽印
-  runeOnCanvas(ctx, main.v, W - 92 - 152, 74, 152, 0.62);
+  const img = new Image();
+// 设置跨域属性（如果图片在本地，一般不需要，但加上更保险）
+img.crossOrigin = "Anonymous";
+// 拼装图片路径，例如 images/青鸟.png
+img.src = "images/" + main.n + ".png";
+
+// 如果图片已经加载过（缓存），直接绘制；否则监听加载事件
+if (img.complete) {
+    ctx.drawImage(img, W - 92 - 152, 74, 152, 152);
+} else {
+    img.onload = () => {
+        // 绘制图片到指定位置和大小
+        ctx.drawImage(img, W - 92 - 152, 74, 152, 152);
+        // 绘制完成后，重新更新海报图片的 base64 数据
+        $("posterImg").src = ctx.canvas.toDataURL("image/png");
+        posterReady = true;
+    };
+    // 为了防止异步加载导致画布数据没有及时更新，可以先画个占位或直接返回
+    // 这里不做 return，继续执行下面的文字绘制，图片加载完后会覆盖在对应位置
+}
 
   // 标签与兽名
   ctx.fillStyle = POSTER.soft;
