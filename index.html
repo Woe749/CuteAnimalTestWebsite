@@ -793,8 +793,8 @@ img.src = "images/" + main.n + ".png";
 
 // 如果图片已经加载过（缓存），直接绘制；否则监听加载事件
 if (img.complete) {
-    const imgW = 152 * 2.5; // 放大 2.5 倍
-	const imgH = 152 * 2.5;
+    const imgW = 152 * 2; // 放大 2.5 倍
+	const imgH = 152 * 2;
 	// 由于图片变大，向左、向下偏移，保证右上角对齐
 	const imgX = W - 92 - imgW + 40; 
 	const imgY = 74 - 40; 
@@ -811,8 +811,8 @@ if (img.complete) {
 } else {
     img.onload = () => {
         // 绘制图片到指定位置和大小
-        const imgW = 152 * 2.5; // 放大 2.5 倍
-		const imgH = 152 * 2.5;
+        const imgW = 152 * 2; // 放大 2.5 倍
+		const imgH = 152 * 2;
 		// 由于图片变大，向左、向下偏移，保证右上角对齐
 		const imgX = W - 92 - imgW + 40; 
 		const imgY = 74 - 40; 
