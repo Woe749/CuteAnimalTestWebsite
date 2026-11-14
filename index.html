@@ -793,11 +793,39 @@ img.src = "images/" + main.n + ".png";
 
 // 如果图片已经加载过（缓存），直接绘制；否则监听加载事件
 if (img.complete) {
-    ctx.drawImage(img, W - 92 - 152, 74, 152, 152);
+    const imgW = 152 * 2.5; // 放大 2.5 倍
+const imgH = 152 * 2.5;
+// 由于图片变大，向左、向下偏移，保证右上角对齐
+const imgX = W - 92 - imgW + 40; 
+const imgY = 74 - 40; 
+
+if (img.complete) {
+    ctx.drawImage(img, imgX, imgY, imgW, imgH);
+} else {
+    img.onload = () => {
+        ctx.drawImage(img, imgX, imgY, imgW, imgH);
+        $("posterImg").src = ctx.canvas.toDataURL("image/png");
+        posterReady = true;
+    };
+}
 } else {
     img.onload = () => {
         // 绘制图片到指定位置和大小
-        ctx.drawImage(img, W - 92 - 152, 74, 152, 152);
+        const imgW = 152 * 2.5; // 放大 2.5 倍
+const imgH = 152 * 2.5;
+// 由于图片变大，向左、向下偏移，保证右上角对齐
+const imgX = W - 92 - imgW + 40; 
+const imgY = 74 - 40; 
+
+if (img.complete) {
+    ctx.drawImage(img, imgX, imgY, imgW, imgH);
+} else {
+    img.onload = () => {
+        ctx.drawImage(img, imgX, imgY, imgW, imgH);
+        $("posterImg").src = ctx.canvas.toDataURL("image/png");
+        posterReady = true;
+    };
+}
         // 绘制完成后，重新更新海报图片的 base64 数据
         $("posterImg").src = ctx.canvas.toDataURL("image/png");
         posterReady = true;
